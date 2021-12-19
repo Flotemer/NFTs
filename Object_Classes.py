@@ -163,12 +163,15 @@ class NFT:
 		
 		print("UID: " + str(self.UID) + trait_list)
 
-	def saveImage(self):
+	def saveImage(self, pixelate = None ):
 		nftImage = Image.new(mode = "RGBA", size = (600,600))
 		for trait in self.traits.contents:
 			filePath = trait.filePath
 			nextLayerImage = Image.open(filePath).convert("RGBA")
 			nftImage.alpha_composite(nextLayerImage)
-		#nftImage.show()
+			
+		if pixelate is not None:
+			pixelatedImage = nftImage.resize(pixelate,resample=Image.BILINEAR)
+			nftImage = pixelatedImage.resize(nftImage.size,Image.NEAREST)
 		nftImage.save("/Users/harry/Documents/GitHub/NFTs/Output/" + str(self.UID) + ".png")
 		print("NFT:"+ str(self.UID) + "---Saved")
