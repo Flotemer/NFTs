@@ -37,46 +37,30 @@ for row in layers_df.iterrows():
 #---------------------------------------------------------------------------
 for row in traits_df.iterrows():
 
-	trait = OCS.Trait(row[1][0], row[1][1],row[1][3])
+	trait = OCS.Trait(row[1][0], row[1][1],row[1][5],row[1][3])
 	traits.add(trait)	
 	#trait.print()
 traits.updateBounds()
+
+
 
 #---------------------------------------------------------------------------
 #5. generate list of nfts with traits
 #---------------------------------------------------------------------------
 
 
-nfts = Gen.generateNFTs(29,layers,traits)
-for nft in nfts:
-	nft.print()
+nfts = Gen.generateNFTs(100,layers,traits)
 
 
 
 
+#---------------------------------------------------------------------------
+#6. generate images from nft features
+#---------------------------------------------------------------------------
 
+for nft in nfts.values():
+	pass
+	nft.saveImage()
 
-
-
-
-background = Image.open("testingbackground.png")
-foreground = Image.open("Overlay.png")
-
-
-class Sale_Receipts:
-	def __init__(self, path = "", contents = []):
-		self.source_folder = source_folder
-		self.contents = contents
-
-	def print_files(self):
-		os.listdir(path=path)
-
-a = Sales_Receipts(path = '')
-
-final1 = Image.new(mode = "RGBA", size = background.size, color = (100,100,0,50))
-#(mode = "RGB", size = (200, 200), color = (153, 153, 255))
-final1.show()
-final1.paste(background, (0,0), background)
-final1.paste(foreground, (0,0), foreground)
 
 

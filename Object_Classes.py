@@ -1,18 +1,20 @@
 
 import random
+import os
+from PIL import Image
 
-
+print(os.getcwd())
 class Trait:
 	
-	priority = int
-	filepath = str
+
 	start_occurance = int
 	end_occurance = int
 
-	def __init__(self, name, layerName, occurances):
+	def __init__(self, name, layerName, occurances, filePath):
 		self.name = name
 		self.layerName = layerName
 		self.occurances = occurances
+		self.filePath = filePath
 
 	def setPriority(layerList):
 		if type(layerList) == Layers:
@@ -20,6 +22,7 @@ class Trait:
 
 	def print(self):
 		print(vars(self))
+
 
 
 
@@ -57,6 +60,9 @@ class Traits:
 			x = i.end_occurance + 1
 			lastLayer = i.layerName
 
+
+
+
 	def SelectRandTrait(self, layer):
 		totalOccurances = 0
 
@@ -80,20 +86,34 @@ class Layer:
 	def __init__(self,name,priority):
 		self.name = name
 		self.priority = priority
+		self.occurances = 0
 
 	def print(self):
 		print(vars(self))
 
+	def update_occurances(self,traits):
+		self.occurances = 0
+		for trait in traits.contents:
+			if trait.layerName == self.name:
+				self.occurances += 1
+
+
 class Layers: 
 	
 	contents = []
-	
+	totalCombinations = 1
 	def __init__(self):
 		pass
 	
 	def printLayers(self):
 		for layer in self.contents:
 			layer.print()
+
+	def update_occurances(self,traits):
+		self.totalCombinations = 1
+		for layer in self.contents:
+			layer.update_occurances(traits)
+			self.totalCombinations *= layer.occurances
 
 	def add(self,layer):
 		if isinstance(layer.name, str):
@@ -121,6 +141,17 @@ class NFT:
 	def __init__(self, UID, traits = []):
 		self.UID = UID
 		self.traits = traits
+		self.hash = self.generate_hash()
+
+	def generate_hash(self):
+		string = ""
+		for i in self.traits.contents:
+			string += i.name
+		#print(string)
+		#print(hash(string))
+		#print(hash(string))
+		return hash(string)
+
 
 	def show(self):
 		pass
@@ -131,3 +162,13 @@ class NFT:
 			trait_list += "(" + i.layerName + ":" +(i.name) + ")"
 		
 		print("UID: " + str(self.UID) + trait_list)
+
+	def saveImage(self):
+		nftImage = Image.new(mode = "RGBA", size = (600,600))
+		for trait in self.traits.contents:
+			filePath = trait.filePath
+			nextLayerImage = Image.open(filePath).convert("RGBA")
+			nftImage.alpha_composite(nextLayerImage)
+		#nftImage.show()
+		nftImage.save("/Users/harry/Documents/GitHub/NFTs/Output/" + str(self.UID) + ".png")
+		print("NFT:"+ str(self.UID) + "---Saved")
