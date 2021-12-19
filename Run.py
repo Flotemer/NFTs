@@ -59,7 +59,7 @@ nfts = Gen.generateNFTs(100,layers,traits)
 #---------------------------------------------------------------------------
 
 for nft in nfts.values():
-	nft.saveImage(pixelate = (10,10))
+	nft.saveImage()
 
 
 
